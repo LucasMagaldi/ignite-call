@@ -1,10 +1,38 @@
 import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
-import { Container, Form, Header } from './style'
+import { Container, Form, FormError, Header } from './style'
 import { ArrowRight } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const RegisterSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: 'The user needs at least 3 letters' })
+    .regex(/^([a-z\\-]+)$/i, {
+      message: 'O usuário pode ter apenas letras e hifens.',
+    })
+    .transform((username) => username.toLowerCase()),
+  name: z.string().min(3, { message: 'The name needs at least 3 letters' }),
+})
+
+type RegisterFormData = z.infer<typeof RegisterSchema>
 
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterSchema),
+  })
+
+  async function handleRegisterSubmit(data: any) {
+    console.log(data)
+  }
+
   return (
-    <Container>
+    <Container as="form" onSubmit={handleSubmit(handleRegisterSubmit)}>
       <Header>
         <Heading as="strong">Wellcome to Ignite Call!</Heading>
         <Text>
@@ -23,7 +51,13 @@ export default function Register() {
             crossOrigin={undefined}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
+            {...register('username')}
           />
+          {errors.username ? (
+            <FormError>{errors.username.message}</FormError>
+          ) : (
+            ''
+          )}
         </label>
         <label>
           <Text>Full name</Text>
@@ -32,7 +66,9 @@ export default function Register() {
             crossOrigin={undefined}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
+            {...register('name')}
           />
+          {errors.name ? <FormError>{errors.name.message}</FormError> : ''}
         </label>
 
         <Button>
