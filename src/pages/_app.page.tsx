@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app'
-import { globalStyle } from '../../styles/globals'
+import { globalStyle } from '../styles/globals'
 
 globalStyle()
 
