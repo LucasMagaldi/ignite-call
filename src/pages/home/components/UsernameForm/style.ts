@@ -16,3 +16,8 @@ export const Form = styled(Box, {
     cursor: 'pointer',
   },
 })
+
+export const FormAnnotations = styled('div', {
+  marginTop: '$2',
+  color: '$gray200',
+})
