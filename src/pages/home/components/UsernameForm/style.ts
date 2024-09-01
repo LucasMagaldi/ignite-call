@@ -5,7 +5,7 @@ export const Form = styled(Box, {
   gridTemplateColumns: '1fr auto',
   gap: '$2',
   padding: '$4',
-  button: {
+  [`${Button}`]: {
     display: 'flex',
     alignItems: 'center',
     background: '#00875F',

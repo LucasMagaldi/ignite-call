@@ -1,10 +1,11 @@
-import { TextInput, Text } from '@ignite-ui/react'
+import { TextInput, Text, Button } from '@ignite-ui/react'
 import { Form, FormAnnotations } from './style'
 import { ArrowRight } from 'phosphor-react'
 
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
 
 const UsernameFormSchema = z.object({
   username: z
@@ -18,16 +19,18 @@ const UsernameFormSchema = z.object({
 type UsernameFormData = z.infer<typeof UsernameFormSchema>
 
 export default function UsernameForm() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<UsernameFormData>({
     resolver: zodResolver(UsernameFormSchema),
   })
 
   async function handleUsernameFormSubmit(data: UsernameFormData) {
-    console.log(data)
+    const { username } = data
+    router.push(`/register?username=${username}`)
   }
 
   return (
@@ -43,10 +46,10 @@ export default function UsernameForm() {
           onPointerLeaveCapture={undefined}
           {...register('username')}
         />
-        <button type="submit">
+        <Button type="submit" disabled={isSubmitting}>
           Book
           <ArrowRight />
-        </button>
+        </Button>
       </Form>
       <FormAnnotations>
         {errors.username ? <Text>{errors.username.message}</Text> : ''}
